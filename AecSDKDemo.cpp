@@ -87,14 +87,14 @@ int __cdecl _tmain(int argc, const TCHAR ** argv)
     DWORD dwStatus;
 
     // Parameters to config DMO
-    int  iSystemMode = MODE_NOT_SET;    // AEC-MicArray DMO system mode
-    int  iOutFileIdx = -1;              // argument index for otuput file name
-    int  iMicDevIdx = -2;               // microphone device index
-    int  iSpkDevIdx = -2;               // speaker device index
-    BOOL bFeatrModeOn = 0;              // turn feature mode on/off
-    BOOL bNoiseSup = 1;                 // turn noise suppression on/off
-    BOOL bAGC = 0;                      // turn digital auto gain control on/off
-    BOOL bCntrClip = 0;                 // turn center clippng on/off
+    int  iSystemMode = SINGLE_CHANNEL_AEC;    // AEC-MicArray DMO system mode
+    int  iOutFileIdx = -1;                    // argument index for otuput file name
+    int  iMicDevIdx = -2;                     // microphone device index
+    int  iSpkDevIdx = -2;                     // speaker device index
+    BOOL bFeatrModeOn = 1;                    // turn feature mode on/off
+    BOOL bNoiseSup = 1;                       // turn noise suppression on/off
+    BOOL bAGC = 1;                            // turn digital auto gain control on/off
+    BOOL bCntrClip = 1;                       // turn center clippng on/off
 
     // control how long the Demo runs
     int  iDuration = 60;   // seconds
@@ -226,9 +226,10 @@ int __cdecl _tmain(int argc, const TCHAR ** argv)
     if (iMicDevIdx<-1 || iMicDevIdx>=(int)uCapDevCount)
     {
         do{
-            printf("Select device ");
-            scanf_s("%255s", pcScanBuf, 255); 
-            iMicDevIdx = atoi(pcScanBuf);
+            //printf("Select device ");
+            //scanf_s("%255s", pcScanBuf, 255); 
+            //iMicDevIdx = atoi(pcScanBuf);
+            iMicDevIdx = 0;
             if (iMicDevIdx < -1 || iMicDevIdx >= (int)uCapDevCount)
                 printf("Invalid Capture Device ID \n");
             else
@@ -263,9 +264,10 @@ int __cdecl _tmain(int argc, const TCHAR ** argv)
         if (iSpkDevIdx<-1 || iSpkDevIdx>=(int)uRenDevCount)
         {
             do{
-                printf("Select device ");
-                scanf_s("%255s", pcScanBuf, 255); 
-                iSpkDevIdx = atoi(pcScanBuf);
+                //printf("Select device ");
+                //scanf_s("%255s", pcScanBuf, 255);
+                //iSpkDevIdx = atoi(pcScanBuf);
+                iSpkDevIdx = 0;
                 if (iSpkDevIdx < -1 || iSpkDevIdx >= (int)uRenDevCount)
                     printf("Invalid Render Device ID \n");
                 else
@@ -277,7 +279,7 @@ int __cdecl _tmain(int argc, const TCHAR ** argv)
         else
             _tprintf(_T("\n %s is selected for rendering \n"), pRenderDeviceInfo[iSpkDevIdx].szDeviceName);
     }else{
-    iSpkDevIdx = -1;
+        iSpkDevIdx = -1;
     }
 
     SAFE_ARRAYDELETE(pRenderDeviceInfo);
@@ -448,6 +450,9 @@ exit:
     SAFE_RELEASE(pPS);
 
     CoUninitialize();
+
+    puts("\nAEC-MicArray is stop ... Press \"s\" to over");
+    _getch();
 
     return hr;
 }
