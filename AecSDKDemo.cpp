@@ -375,7 +375,7 @@ int __cdecl _tmain(int argc, const TCHAR ** argv)
     mt.formattype = FORMAT_WaveFormatEx;
     memcpy(mt.pbFormat, &wfxOut, sizeof(WAVEFORMATEX));
     
-    hr = pDMO->SetOutputType(0, &mt, 0); 
+    hr = pDMO->SetOutputType(0, &mt, 0);
     CHECK_RET(hr, "SetOutputType failed");
     MoFreeMediaType(&mt);
 
@@ -414,13 +414,16 @@ int __cdecl _tmain(int argc, const TCHAR ** argv)
             outputBuffer.Init((byte*)pbOutputBuffer, cOutputBufLen, 0);
             OutputBufferStruct.dwStatus = 0;
             hr = pDMO->ProcessOutput(0, 1, &OutputBufferStruct, &dwStatus);
-            CHECK_RET (hr, "ProcessOutput failed");
 
             if (hr == S_FALSE) {
+                printf("ProcessOutput failed %d \n", cTtlToGo);
                 cbProduced = 0;
             } else {
                 hr = outputBuffer.GetBufferAndLength(NULL, &cbProduced);
                 CHECK_RET (hr, "GetBufferAndLength failed");
+                if (cbProduced) {
+                    printf("write %d \n", cbProduced);
+                }
             }
 
             // dump output data into a file with PCM format.
